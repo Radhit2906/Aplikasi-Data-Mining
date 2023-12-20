@@ -1,9 +1,10 @@
 import warnings
 import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix, precision_score, recall_score, accuracy_score
 from sklearn import tree
+import pandas as pd
 import streamlit as st
+from sklearn.model_selection import train_test_split
 
 from function import train_model
 
@@ -14,28 +15,57 @@ def app(df, x, y):
     
     st.set_option('deprecation.showPyplotGlobalUse', False)
 
-    st.title("Halaman Visualisasi")
+    st.title("Visualization Page")
 
     if st.checkbox("Plot Confusion Matrix"):
         model, score = train_model(x, y)
 
-        # Buat prediksi menggunakan model
-        y_pred = model.predict(x)
+        # Split the data into training and testing sets
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-        # Dapatkan matriks kebingungan
-        cm = confusion_matrix(y, y_pred)
+        # Train the model on the training set
+        model.fit(x_train, y_train)
 
-        # Tampilkan matriks kebingungan menggunakan ConfusionMatrixDisplay
+        # Make predictions using the model
+        y_pred = model.predict(x_test)
+
+        # Get the confusion matrix
+        cm = confusion_matrix(y_test, y_pred)
+
+        # Calculate evaluation metrics
+        true_positive = cm[1, 1]
+        true_negative = cm[0, 0]
+        false_positive = cm[0, 1]
+        false_negative = cm[1, 0]
+
+        precision = precision_score(y_test, y_pred, average='macro')
+        recall = recall_score(y_test, y_pred, average='macro')
+        accuracy = accuracy_score(y_test, y_pred)
+
+        # Display confusion matrix using ConfusionMatrixDisplay
         cmd = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
         cmd.plot(cmap='viridis', values_format='d', ax=plt.gca())
-        
+
+        # Create a DataFrame to display metrics
+        data = {
+            'Metric': ['Positives', 'Negatives', 'True Positives', 'True Negatives', 'False Positives', 'False Negatives', 'Precision', 'Recall', 'Accuracy'],
+            'Value': [true_positive + false_positive, true_negative + false_negative, true_positive, true_negative, false_positive, false_negative, precision, recall, accuracy]
+        }
+
+        df_metrics = pd.DataFrame(data)
+        st.table(df_metrics)
+
         st.pyplot()
 
     if st.checkbox("Plot Decision Tree"):
-        model, score = train_model(x,y)
+        model, score = train_model(x, y)
         dot_data = tree.export_graphviz(
-            decision_tree=model, max_depth=4, out_file=None, filled=True,rounded=True,
-            feature_names=x.columns, class_names=['Tidak','Ya']
+            decision_tree=model, max_depth=4, out_file=None, filled=True, rounded=True,
+            feature_names=x.columns, class_names=['No', 'Yes']
         )
 
         st.graphviz_chart(dot_data)
+
+# Example usage
+# df, x, y are assumed to be defined and initialized before calling the app function
+# app(df, x, y)
