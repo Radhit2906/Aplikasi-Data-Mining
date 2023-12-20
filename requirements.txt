@@ -3,6 +3,5 @@ numpy==1.24.3
 seaborn==0.12.2
 streamlit
 matplotlib==3.8.2
-pickle
 scikit-learn
 pip
