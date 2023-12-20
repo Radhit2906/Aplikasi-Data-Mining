@@ -5,6 +5,14 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 from function import predict
 
+mappingDesil ={
+    "Kurang Sejahtera": 1,
+    "Mendekati Sejahtera":2,
+    "Sejahtera":3,
+    "Sangat Sejahtera":4
+
+}
+
 mappingPekerjaan = {
     "Pekerja Lepas": 0,
     "Kosong/belum bekerja": 1,
@@ -39,7 +47,7 @@ def app(df, x, y):
     col1, col2 = st.columns(2)
 
     with col1:
-        DesilKesejahteraan = st.selectbox('Desil', ('1', '2', '3', '4'))
+        DesilKesejahteraan = st.selectbox('Desil', ('Kurang Sejahtera', 'Mendekati Sejahtera', 'Sejahtera', 'Sangat Sejahtera'))
 
     with col1:
         JenisKelamin = st.selectbox('Jenis Kelamin', ('Laki-Laki', 'Perempuan'))
@@ -57,6 +65,7 @@ def app(df, x, y):
         Usia2023 = st.text_input('Usia')
 
     # Mengubah string ke float
+    DesilKesejahteraan = float(mappingDesil[DesilKesejahteraan])
     Pekerjaan = float(mappingPekerjaan[Pekerjaan])
     JenisKelamin=float(mappingJenisKelamin[JenisKelamin])
     PrioritasVerval =float(mappingPrioritas[PrioritasVerval])
