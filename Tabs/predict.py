@@ -23,20 +23,20 @@ mappingPekerjaan = {
     "Petani": 6,
     "PNS/TNI/Polri": 7
 }
-mappingJenisKelamin ={
+mappingJenisKelamin ={  
     'Laki-Laki': 0,
     'Perempuan' : 1
 }
 
 mappingPrioritas={
-    "Normal": 0,
-    "NIK Duplikat": 1    
+    "Normal": 1,
+    "NIK Duplikat": 0    
 }
 
 mappingKepalaKeluarga={
-    "Kepala Keluarga": 0,
+    "Kepala Keluarga": 2,
     "Istri":1,
-    "Anak":2,
+    "Anak":0,
     "Lainnya":3
 }
 def app(df, x, y):
