@@ -1,6 +1,6 @@
 import warnings
 import matplotlib.pyplot as plt
-from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix, precision_score, recall_score, accuracy_score
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix, precision_score, recall_score, accuracy_score, classification_report
 from sklearn import tree
 import pandas as pd
 import streamlit as st
@@ -45,18 +45,23 @@ def app(df, x, y):
         # Display confusion matrix using ConfusionMatrixDisplay
         cmd = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
         cmd.plot(cmap='viridis', values_format='d', ax=plt.gca())
-
+        
         # Create a DataFrame to display metrics
         data = {
             'Metric': ['Positives', 'Negatives', 'True Positives', 'True Negatives', 'False Positives', 'False Negatives', 'Precision', 'Recall', 'Accuracy'],
             'Value': [true_positive + false_positive, true_negative + false_negative, true_positive, true_negative, false_positive, false_negative, precision, recall, accuracy]
         }
 
+
         df_metrics = pd.DataFrame(data)
         st.table(df_metrics)
 
         st.pyplot()
 
+        st.subheader("Classification Report")
+        cr = classification_report(y_test, y_pred)
+        st.text(cr)
+        
     if st.checkbox("Plot Decision Tree"):
         model, score = train_model(x, y)
         dot_data = tree.export_graphviz(
