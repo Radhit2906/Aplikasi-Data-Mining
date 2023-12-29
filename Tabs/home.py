@@ -14,6 +14,8 @@ def app():
 
     st.subheader("Dataset")
     st.write("Dataset bersumber dari Kementerian Koordinator Pembangunan Manusia dan Kebudayaan. 2023.")
+    st.write("Sampel yang digunakan : 6432 sampel")
+
     st.write("Metode yang digunakan yaitu : Decision Tree")
 
     st.subheader("Tujuan")
