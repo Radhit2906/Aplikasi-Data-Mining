@@ -21,9 +21,9 @@ def app():
     
     
     #Proses
-    st.subheader("Proses")
+    st.subheader("Modelling Data")
     st.subheader("Data Sebelum di encoding")
-    data = pd.read_csv('Datayangdipakai.csv')
+    data = pd.read_csv('DataUas.csv')
     
     # Remove the following line, as it is not necessary and may cause an error
     # DataFrame.to_csv('Dataprojek', index=False)
@@ -80,6 +80,7 @@ def app():
 
     #Data Setelah di encoding
 
+    #memunculkan chart data
     show_chart(data) # Menggunakan df bukan data
     st.write("<p style='font-size: 20px;'>Berdasarkan chart di atas berisi target atau label yang digunakan pada aplikasi prediksi ini</p>",
              unsafe_allow_html=True)  # Menambahkan unsafe_allow_html untuk memungkinkan HTML
@@ -102,7 +103,7 @@ def app():
 
     st.subheader("Membagi Data")
     st.write("Membagi data untuk training dan testing")
-    st.code("x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=0)")
+    st.code("x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=42)")
 
     st.subheader("Membuat Decision Tree Classifier")
 
@@ -135,11 +136,40 @@ def app():
 
     st.code(crs_display, language="python")
 
+    st.write("Cross validation ini menggunakan cv = 5 yaitu 5 fold atau 5 lipatan")
+
     st.write("Menghitung akurasi pada data pengujian ")
     st.code("dtc_acc = accuracy_score(y_test, dtc.predict(x_test,))")
+
+    #Simulasi Model
+    st.subheader("Simulasi Model")
+    st.write("Setelah cek Akurasi, kita melakukan simulasi model untuk melihat hasil dari prediksinya")
+    sim = """
+    #Input data untuk diprediksi 
+        input_data = (0,0,1,1,1,90)
+
+        input_data_as_numpy_array = np.array(input_data)
+
+        #Mengubah bentuk array input menjadi format yang dapat diterima oleh 
+        #reshape(1, -1) digunakan untuk mengubah array menjadi matriks 2D dengan satu baris dan panjang yang sesuai.
+        input_data_reshape = input_data_as_numpy_array.reshape(1,-1)
+
+        #Menggunakan model yang telah dilatih untuk melakukan prediksi terhadap input data yang telah diubah bentuknya.
+        prediction = model.predict(input_data_reshape)
+
+        #Mencetak Hasil Prediksi 
+        print(prediction)
+
+        if (prediction[0]==0):
+            print("Penduduk tidak mendapat bantuan sembako")
+        else :
+            print("Penduduk berhak mendapatkan bantuan sembako")        
+    """
+    st.code(sim, language="python")
+
 def show_chart(data):
 
-    st.title("Chart Atribut Penerima Sembako / Target")
+    st.subheader("Chart Atribut Penerima Sembako / Target")
     # Atribut yang akan divisualisasikan
     atribut = "PenerimaSEMBAKO"
     
