@@ -18,6 +18,9 @@ def app(df, x, y):
     st.title("Visualization Page")
 
     if st.checkbox("Plot Confusion Matrix"):
+
+
+
         model, score = train_model(x, y)
 
         # Split the data into training and testing sets
@@ -52,13 +55,30 @@ def app(df, x, y):
             'Value': [true_positive + false_positive, true_negative + false_negative, true_positive, true_negative, false_positive, false_negative, precision, recall, accuracy]
         }
 
+        st.pyplot()
 
         df_metrics = pd.DataFrame(data)
         st.table(df_metrics)
 
-        st.pyplot()
+
+
+
+        st.write("<p style='font-size: 20px;'><strong>Keterangan<strong></p>",
+             unsafe_allow_html=True)
+        
+        st.write("**Positives**          : Jumlah total kasus positif dalam dataset dalam prediksi model")
+        st.write("**Negatives**          : Jumlah total kasus negatif dalam dataset dalam prediksi model")
+        st.write("**True Positives**     : Jumlah kasus di mana model benar-benar memprediksi kelas positif dan prediksinya benar.")
+        st.write("**True Negatives**     : Jumlah kasus di mana model benar-benar memprediksi kelas negatif dan prediksinya benar.")
+        st.write("**False Positives**    : Jumlah kasus di mana model memprediksi kelas positif, tetapi sebenarnya kelasnya negatif.")
+        st.write("**False Negatives**    : Jumlah kasus di mana model memprediksi kelas negatif, tetapi sebenarnya kelasnya positif.")
+        st.write("**Precision**          : mengukur sejauh mana prediksi positif model akurat.")
+        st.write("**Recall**             : Recall mengukur sejauh mana model dapat menangkap atau mengidentifikasi semua kasus positif yang sebenarnya.")
+        st.write("**Akurasi**            : mengukur sejauh mana model secara keseluruhan memprediksi dengan benar.")
+        
 
         st.subheader("Classification Report")
+
         cr = classification_report(y_test, y_pred)
         st.text(cr)
         
